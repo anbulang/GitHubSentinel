@@ -58,9 +58,11 @@ class CommandHandler:
             print(f"  - {sub}")
 
     def fetch_updates(self, args):
-        updates = self.github_client.fetch_updates()
-        for update in updates:
-            print(update)
+        subscriptions = self.subscription_manager.list_subscriptions()
+        for sub in subscriptions:
+            print(f"Fetching updates for {sub}")
+            updates = self.github_client.fetch_updates(sub)
+            print(updates)
 
     def export_daily_progress(self, args):
         self.github_client.export_daily_progress(args.repo)

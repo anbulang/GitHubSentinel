@@ -2,6 +2,9 @@
 
 import threading
 import shlex
+
+from argparse import ArgumentError
+
 from config import Config
 from scheduler import Scheduler
 from github_client import GitHubClient
@@ -18,7 +21,7 @@ def main():
     config = Config()
     github_client = GitHubClient(config.github_token)
     notifier = Notifier(config.notification_settings)
-    llm = LLM(config.openai_api_key)
+    llm = LLM()
     report_generator = ReportGenerator(llm)
     subscription_manager = SubscriptionManager(config.subscriptions_file)
     command_handler = CommandHandler(github_client, subscription_manager, report_generator)
@@ -33,22 +36,25 @@ def main():
     
     scheduler_thread = threading.Thread(target=run_scheduler, args=(scheduler,))
     scheduler_thread.daemon = True
-    scheduler_thread.start()
+    # scheduler_thread.start()
 
     parser = command_handler.parser
+    command_handler.print_help()
 
     while True:
         try:
             user_input = input("GitHub Sentinel> ")
             if user_input in ['exit', 'quit']:
                 break
-            args = parser.parse_args(shlex.split(user_input))
-            if args.command is None:
+            try:
+                args = parser.parse_args(shlex.split(user_input))
+                if args.command is None:
+                    continue
+                args.func(args)
+            except SystemExit as e:
                 print("Invalid command. Type 'help' to see the list of available commands.")
-                continue
-            args.func(args)
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"Unexpected error: {e}")
 
 if __name__ == '__main__':
     main()

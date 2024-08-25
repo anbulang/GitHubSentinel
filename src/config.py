@@ -8,8 +8,7 @@ class Config:
     def load_config(self):
         with open('config.json', 'r') as f:
             config = json.load(f)
-            self.github_token = config.get('github_token')
+            self.github_token = os.environ.get('GITHUB_TOKEN') or config.get('github_token')
             self.notification_settings = config.get('notification_settings')
             self.subscriptions_file = config.get('subscriptions_file')
             self.update_interval = config.get('update_interval', 24 * 60 * 60)  # Default to 24 hours
-            self.openai_api_key = os.getenv('OPENAI_API_KEY')
