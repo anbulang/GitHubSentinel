@@ -2,7 +2,6 @@
 
 import os
 from datetime import date
-from llm import LLM
 
 class ReportGenerator:
     def __init__(self, llm):
@@ -30,7 +29,7 @@ class ReportGenerator:
         report = self.llm.generate_daily_report(markdown_content)
 
         report_file_path = os.path.splitext(markdown_file_path)[0] + "_report.md"
-        with open(report_file_path, 'w') as report_file:
+        with open(report_file_path, 'w+') as report_file:
             report_file.write(report)
 
         print(f"Generated report saved to {report_file_path}")
