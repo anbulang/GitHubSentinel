@@ -25,10 +25,17 @@ class LLM:
         LOG.info("Starting report generation using GPT model.")
         
         try:
+            # 设置 System role，提供明确的上下文和指令
+            system_message = {
+                "role": "system",
+                "content": "你是一名高技能的技术写作专家。生成一份简明清晰的每日报告，汇总最近的项目更新。确保报告包括：1）新增功能；2）主要改进；3）修复问题。报告应具有逻辑结构，注重细节和清晰度。"
+            }
+
             # 调用OpenAI GPT模型生成报告
             response = self.client.chat.completions.create(
                 model="gpt-3.5-turbo",  # 指定使用的模型版本
                 messages=[
+                    system_message,  # 提交系统角色的消息
                     {"role": "user", "content": prompt}  # 提交用户角色的消息
                 ]
             )
