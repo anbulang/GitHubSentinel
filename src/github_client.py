@@ -75,14 +75,11 @@ class GitHubClient:
             file.write("\n## Issues Closed Today\n")
             for issue in updates['issues']:  # 写入今天关闭的问题
                 file.write(f"- {issue['title']} #{issue['number']}\n")
-            file.write("\n## Pull Requests Merged Today\n")
-            for pr in updates['pull_requests']:  # 写入今天合并的拉取请求
-                file.write(f"- {pr['title']} #{pr['number']}\n")
         
         LOG.info(f"Exported daily progress to {file_path}")  # 记录日志
         return file_path
 
-    def export_progress_by_date_range(self, repo, days=1, since=None, until=None):
+    def export_progress_by_date_range2(self, repo, days=1, since=None, until=None):
         # 按天导出指定仓库的进度，包括问题和拉取请求
         if days:
             today = date.today()  # 获取当前日期
@@ -118,3 +115,24 @@ class GitHubClient:
             
             LOG.info(f"Exported time-range progress to {file_path}")  # 记录日志
             return file_path
+    def export_progress_by_date_range(self, repo, days):
+        today = date.today()  # 获取当前日期
+        since = today - timedelta(days=days)  # 计算开始日期
+        
+        updates = self.fetch_updates(repo, since=since.isoformat(), until=today.isoformat())  # 获取指定日期范围内的更新
+        
+        repo_dir = os.path.join('daily_progress', repo.replace("/", "_"))  # 构建目录路径
+        os.makedirs(repo_dir, exist_ok=True)  # 确保目录存在
+        
+        # 更新文件名以包含日期范围
+        date_str = f"{since}_to_{today}"
+        file_path = os.path.join(repo_dir, f'{date_str}.md')  # 构建文件路径
+        
+        with open(file_path, 'w') as file:
+            file.write(f"# Progress for {repo} ({since} to {today})\n\n")
+            file.write(f"\n## Issues Closed in the Last {days} Days\n")
+            for issue in updates['issues']:  # 写入在指定日期内关闭的问题
+                file.write(f"- {issue['title']} #{issue['number']}\n")
+        
+        LOG.info(f"Exported time-range progress to {file_path}")  # 记录日志
+        return file_path
