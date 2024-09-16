@@ -1,4 +1,4 @@
 [
-    "langchain-ai/langchain",
-    "ollama/ollama"
+    "ollama/ollama",
+    "vllm-project/vllm"
 ]
