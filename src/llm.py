@@ -1,4 +1,3 @@
-import os
 import json
 from openai import OpenAI  # 导入OpenAI库用于访问GPT模型
 from logger import LOG  # 导入日志模块

@@ -1,4 +1,4 @@
-import gradio as gr  # 导入gradio库用于创建GUI
+import gradio as gr
 
 from config import Config  # 导入配置管理模块
 from github_client import GitHubClient  # 导入用于GitHub API操作的客户端
@@ -15,6 +15,7 @@ report_generator = ReportGenerator(llm)
 subscription_manager = SubscriptionManager(config.subscriptions_file)
 
 def export_progress_by_date_range(repo, days):
+    LOG.info("Exporting progress report for {} days for repo: {}", days, repo)  # 记录导出报告的操作
     # 定义一个函数，用于导出和生成指定时间范围内项目的进展报告
     raw_file_path = github_client.export_progress_by_date_range(repo, days)  # 导出原始数据文件路径
     report, report_file_path = report_generator.generate_report_by_date_range(raw_file_path, days)  # 生成并获取报告内容及文件路径
