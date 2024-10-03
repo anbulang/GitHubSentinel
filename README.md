@@ -16,6 +16,7 @@
 
 - [GitHub Sentinel](#github-sentinel)
 - [主要功能](#主要功能)
+- [产品截图](#产品截图)
 - [快速开始](#快速开始)
   - [1. 安装依赖](#1-安装依赖)
   - [2. 配置应用](#2-配置应用)
@@ -58,6 +59,15 @@ GitHub Sentinel 是专为大模型（LLMs）时代打造的智能信息检索和
 
 GitHub Sentinel 不仅能帮助用户自动跟踪和分析 `GitHub 开源项目` 的最新动态，还能快速扩展到其他信息渠道，如 `Hacker News` 的热门话题，提供更全面的信息挖掘与分析能力。
 
+### 产品截图
+
+**GitHub 项目进度跟踪与总结**
+
+![gradio_v0.8_github](images/gradio_v0.8_github.png)
+
+**Hacker News 热门技术话题挖掘**
+![gradio_v0.8_hn](images/gradio_v0.8_hn.png)
+
 
 ## 快速开始
 
@@ -71,7 +81,7 @@ pip install -r requirements.txt
 
 ### 2. 配置应用
 
-编辑 `config.json` 文件，以设置您的 GitHub Token、Email 设置（以腾讯企微邮箱为例）、订阅文件、更新设置，以及大模型服务配置（支持 OpenAI GPT API 和 Ollama 私有化大模型服务）：
+编辑 `config.json` 文件，以设置您的 GitHub Token、Email 设置（以腾讯企微邮箱为例）、订阅文件、更新设置，大模型服务配置（支持 OpenAI GPT API 和 Ollama 私有化大模型服务）,以及自动检索和生成的报告类型（GitHub项目进展， Hacker News 热门话题和前沿技术趋势）：
 
 ```json
 {
@@ -94,7 +104,11 @@ pip install -r requirements.txt
         "ollama_model_name": "llama3",
         "ollama_api_url": "http://localhost:11434/api/chat"
     },
-    "report_types": ["github"],
+    "report_types": [
+        "github",
+        "hacker_news_hours_topic",
+        "hacker_news_daily_report"
+    ],
     "slack": {
         "webhook_url": "your_slack_webhook_url"
     }
@@ -175,7 +189,6 @@ python src/command_tool.py
 python src/gradio_server.py
 ```
 
-![gradio_demo](images/gradio_demo.png)
 
 - 这将在您的机器上启动一个 Web 服务器，允许您通过用户友好的界面管理订阅和生成报告。
 - 默认情况下，Gradio 服务器将可在 `http://localhost:7860` 访问，但如果需要，您可以公开共享它。
